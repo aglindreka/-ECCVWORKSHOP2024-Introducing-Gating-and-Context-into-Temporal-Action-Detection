@@ -37,7 +37,6 @@ class GatingMechanism(nn.Module):
         combined_outputs = torch.cat((output1, output2), dim=1)
         hidden = F.relu(self.fc1(combined_outputs))
         gate = torch.sigmoid(self.fc2(hidden))
-        #print('I am here: ', gate.shape)
         return gate
 
 class MaskedConv1D(nn.Module):
@@ -347,17 +346,15 @@ class SGPBlock(nn.Module):
         frame_query = frame_query.view(frame_query.shape[0]*frame_query.shape[1], frame_query.shape[2], frame_query.shape[3])  # Shape: [bs * T, 1, embedding_size]
 
 
-        # convw = convw.unsqueeze(1)  # Shape: [bs, 1, embedding_size, T]
-        # convkw = convkw.unsqueeze(1)  # Shape: [bs, 1, embedding_size, T]
 
-        # print('x shape ', x.shape, 'kernel size: ', self.up_size, 'padding: ', (self.up_size // 2, 0))
+
         unfolded_x = F.unfold(x.unsqueeze(2), kernel_size=(self.up_size, 1), padding=(self.up_size // 2, 0))
-        # print('unfolded_x shape: ', unfolded_x.shape)
+
         unfolded_x = unfolded_x.view(x.size(0), x.size(1), self.up_size, -1)
-        # print('unfolded_x after view : ', unfolded_x.shape)
+
         left_frames = unfolded_x[:, :, 0, :]
         right_frames = unfolded_x[:, :, -1, :]
-        # print('left frame: ', left_frames.shape, '; right frame: ', right_frames.shape, '; frame query: ', frame_query.shape)
+
 
 
         left_frames = left_frames.unsqueeze(1) # [bs, embedding_size, T] = > [bs, 1, embedding_size, T]
@@ -370,18 +367,6 @@ class SGPBlock(nn.Module):
         local_branch = self.attention_gating(frame_query, kv, kv)[0]
         local_branch = local_branch.view(out.shape[0], out.shape[-1], out.shape[1]).permute(0, 2, 1).contiguous()
 
-        # summary = self.summarization(out)
-        # summary_mean = torch.mean(summary, dim=1, keepdim=False)
-        # summary_max = torch.max(summary, dim=1, keepdim=False)[0]
-        #
-        # summary_mean = self.shared_ann(summary_mean)
-        # summary_max = self.shared_ann(summary_max)
-        #
-        # weights = torch.sigmoid(summary_mean + summary_max)
-        # weights = weights.unsqueeze(axis=-1)
-        # out_summary = self.summary_fc(out)
-        #
-        # global_branch = out_summary * weights
         out = local_branch + out + local_branch1 + fc * phi
 
         # ========================
