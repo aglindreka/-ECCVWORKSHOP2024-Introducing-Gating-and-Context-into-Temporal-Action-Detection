@@ -4,7 +4,7 @@
 
 ## Overview
 
-This repository contains the code for the paper **"Introducing Gating and Context into Temporal Action Detection"**, which has been accepted for presentation at **ECCV Workshop 2024**. Our work explores novel methods for improving Temporal Action Detection by integrating **gating mechanisms** and **contextual information**.
+This repository contains the code for the paper [**"Introducing Gating and Context into Temporal Action Detection"**](http://www.arxiv.org/abs/2409.04205), which has been accepted for presentation at **ECCV Workshop 2024**. Our work explores novel methods for improving Temporal Action Detection by integrating **gating mechanisms** and **contextual information**.
 
 The code is built upon the excellent foundation provided by the [TriDet repository](https://github.com/dingfengshi/TriDet/tree/master?tab=readme-ov-file). We would like to extend our gratitude to the authors for their contribution and inspiration.
 
